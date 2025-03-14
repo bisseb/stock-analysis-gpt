@@ -35,14 +35,17 @@ def fetch_news(ticker):
 
 def generate_ai_summary(text, stock_ticker):
     prompt = f"Analyze this financial document and summarize key impacts on {stock_ticker}:\n{text[:2000]}"
-    response = openai.ChatCompletion.create(
-        model="gpt-4-turbo",
-        messages=[
-            {"role": "system", "content": "You are an AI assistant helping analyze stock trends."},
-            {"role": "user", "content": prompt}
-        ]
-    )
-    return response["choices"][0]["message"]["content"]
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-4-turbo",
+            messages=[
+                {"role": "system", "content": "You are an AI assistant helping analyze stock trends."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        return response["choices"][0]["message"]["content"]
+    except Exception as e:
+        return f"Error generating AI summary: {str(e)}"
 
 def plot_stock_chart(df, ticker, annotations):
     plt.figure(figsize=(12, 6))
@@ -65,12 +68,9 @@ date_range = st.date_input("Select Date Range", [datetime.date(2023, 1, 1), date
 if st.button("Analyze Stock"):
     if uploaded_pdf and stock_ticker:
         text = extract_text_from_pdf(uploaded_pdf)
-        try:
-            summary = generate_ai_summary(text, stock_ticker)
-            st.subheader("🔍 AI Summary")
-            st.write(summary)
-        except openai.error.OpenAIError as e:
-            st.error(f"OpenAI API error: {str(e)}")
+        summary = generate_ai_summary(text, stock_ticker)
+        st.subheader("🔍 AI Summary")
+        st.write(summary)
         
         news = fetch_news(stock_ticker)
         st.subheader("📰 Recent News")
