@@ -5,10 +5,10 @@ import datetime
 import PyPDF2
 import requests
 from bs4 import BeautifulSoup
-from transformers import pipeline
 
-# Load a free AI model for text summarization
-summarizer = pipeline("summarization")
+# Hugging Face API for text summarization
+HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
+HUGGINGFACE_HEADERS = {"Authorization": "Bearer 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"}  # Replace with your HF API Key
 
 def extract_text_from_pdf(pdf_file):
     text = ""
@@ -35,8 +35,9 @@ def fetch_news(ticker):
 def generate_ai_summary(text, stock_ticker):
     prompt = f"Analyze this financial document and summarize key impacts on {stock_ticker}:\n{text[:2000]}"
     try:
-        summary = summarizer(prompt, max_length=150, min_length=50, do_sample=False)
-        return summary[0]['summary_text']
+        response = requests.post(HUGGINGFACE_API_URL, headers=HUGGINGFACE_HEADERS, json={"inputs": prompt})
+        summary = response.json()
+        return summary[0]['summary_text'] if isinstance(summary, list) else "Error: Invalid response from API"
     except Exception as e:
         return f"Error generating AI summary: {str(e)}"
 
