@@ -7,8 +7,8 @@ import requests
 from bs4 import BeautifulSoup
 import openai
 import os
-# OpenAI API Key (Replace with your key)
 
+# Load OpenAI API Key from environment variable
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def extract_text_from_pdf(pdf_file):
@@ -37,10 +37,11 @@ def generate_ai_summary(text, stock_ticker):
     prompt = f"Analyze this financial document and summarize key impacts on {stock_ticker}:\n{text[:2000]}"
     response = openai.ChatCompletion.create(
         model="gpt-4",
-        messages=[{"role": "system", "content": "You are an AI assistant helping analyze stock trends."},
-              {"role": "user", "content": prompt}]
-)
-summary = response["choices"][0]["message"]["content"]
+        messages=[
+            {"role": "system", "content": "You are an AI assistant helping analyze stock trends."},
+            {"role": "user", "content": prompt}
+        ]
+    )
     return response["choices"][0]["message"]["content"]
 
 def plot_stock_chart(df, ticker, annotations):
