@@ -51,8 +51,9 @@ def plot_stock_chart(df, ticker, annotations):
     plt.figure(figsize=(12, 6))
     plt.plot(df.index, df["Close"], label=f"{ticker} Close Price")
     for date, note in annotations.items():
-        plt.axvline(date, color='r', linestyle='--')
-        plt.text(date, df.loc[date, "Close"], note, fontsize=9, rotation=45)
+        if date in df.index:
+            plt.axvline(date, color='r', linestyle='--')
+            plt.text(date, df.loc[date, "Close"], note, fontsize=9, rotation=45)
     plt.legend()
     plt.title(f"{ticker} Stock Price with Key Events")
     plt.xlabel("Date")
