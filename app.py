@@ -38,7 +38,7 @@ def generate_ai_summary(text, stock_ticker):
     try:
         client = openai.OpenAI()
         response = client.chat.completions.create(
-            model="gpt-4-turbo",
+            model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are an AI assistant helping analyze stock trends."},
                 {"role": "user", "content": prompt}
