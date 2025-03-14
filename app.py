@@ -5,11 +5,10 @@ import datetime
 import PyPDF2
 import requests
 from bs4 import BeautifulSoup
-import openai
-import os
+from transformers import pipeline
 
-# Load OpenAI API Key from environment variable
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Load a free AI model for text summarization
+summarizer = pipeline("summarization")
 
 def extract_text_from_pdf(pdf_file):
     text = ""
@@ -36,15 +35,8 @@ def fetch_news(ticker):
 def generate_ai_summary(text, stock_ticker):
     prompt = f"Analyze this financial document and summarize key impacts on {stock_ticker}:\n{text[:2000]}"
     try:
-        client = openai.OpenAI()
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are an AI assistant helping analyze stock trends."},
-                {"role": "user", "content": prompt}
-            ]
-        )
-        return response.choices[0].message.content
+        summary = summarizer(prompt, max_length=150, min_length=50, do_sample=False)
+        return summary[0]['summary_text']
     except Exception as e:
         return f"Error generating AI summary: {str(e)}"
 
