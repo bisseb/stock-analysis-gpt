@@ -36,7 +36,7 @@ def fetch_news(ticker):
 def generate_ai_summary(text, stock_ticker):
     prompt = f"Analyze this financial document and summarize key impacts on {stock_ticker}:\n{text[:2000]}"
     response = openai.ChatCompletion.create(
-        model="gpt-4",
+        model="gpt-4-turbo",
         messages=[
             {"role": "system", "content": "You are an AI assistant helping analyze stock trends."},
             {"role": "user", "content": prompt}
