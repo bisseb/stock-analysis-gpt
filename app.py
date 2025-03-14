@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 
 # Hugging Face API for text summarization
 HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
-HUGGINGFACE_HEADERS = {"Authorization": "Bearer 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"}  # Replace with your HF API Key
+HUGGINGFACE_HEADERS = {"Authorization": "Bearer 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"}  # Replace with your HF API Key
 
 def extract_text_from_pdf(pdf_file):
     text = ""
