@@ -36,8 +36,10 @@ def generate_ai_summary(text, stock_ticker):
     prompt = f"Analyze this financial document and summarize key impacts on {stock_ticker}:\n{text[:2000]}"
     response = openai.ChatCompletion.create(
         model="gpt-4",
-        messages=[{"role": "user", "content": prompt}]
-    )
+        messages=[{"role": "system", "content": "You are an AI assistant helping analyze stock trends."},
+              {"role": "user", "content": prompt}]
+)
+summary = response["choices"][0]["message"]["content"]
     return response["choices"][0]["message"]["content"]
 
 def plot_stock_chart(df, ticker, annotations):
