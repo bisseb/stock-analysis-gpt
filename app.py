@@ -65,9 +65,12 @@ date_range = st.date_input("Select Date Range", [datetime.date(2023, 1, 1), date
 if st.button("Analyze Stock"):
     if uploaded_pdf and stock_ticker:
         text = extract_text_from_pdf(uploaded_pdf)
-        summary = generate_ai_summary(text, stock_ticker)
-        st.subheader("🔍 AI Summary")
-        st.write(summary)
+        try:
+            summary = generate_ai_summary(text, stock_ticker)
+            st.subheader("🔍 AI Summary")
+            st.write(summary)
+        except openai.error.OpenAIError as e:
+            st.error(f"OpenAI API error: {str(e)}")
         
         news = fetch_news(stock_ticker)
         st.subheader("📰 Recent News")
